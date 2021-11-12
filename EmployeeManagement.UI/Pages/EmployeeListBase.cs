@@ -22,7 +22,7 @@ namespace EmployeeManagement.UI.Pages
                 Email = "john@pragimtech.com",
                 DateOfBirth = new DateTime(1980, 10, 5),
                 Gender = Gender.Male,
-                Department = new Department { DepartmentId = 1, DepartmentName = "HumanResources" },
+                DepartmentId = 1,
                 PhotoPath = "images/John.jfif"
             };
             Employee e2 = new Employee
@@ -33,7 +33,7 @@ namespace EmployeeManagement.UI.Pages
                 Email = "Ryan@pragimtech.com",
                 DateOfBirth = new DateTime(1981, 10, 5),
                 Gender = Gender.Male,
-                Department = new Department { DepartmentId = 2, DepartmentName = "HumanResourcesIT" },
+                DepartmentId = 2,
                 PhotoPath = "images/Ryan.jfif"
             };
             Employee e3 = new Employee
@@ -44,7 +44,7 @@ namespace EmployeeManagement.UI.Pages
                 Email = "Tyler@pragimtech.com",
                 DateOfBirth = new DateTime(1989, 10, 5),
                 Gender = Gender.Male,
-                Department = new Department { DepartmentId = 3, DepartmentName = "Oyova" },
+                DepartmentId = 3,
                 PhotoPath = "images/Tyler.jfif"
             };
             Employee e4 = new Employee
@@ -55,7 +55,7 @@ namespace EmployeeManagement.UI.Pages
                 Email = "Brandon@pragimtech.com",
                 DateOfBirth = new DateTime(1990, 10, 5),
                 Gender = Gender.Male,
-                Department = new Department { DepartmentId = 4, DepartmentName = "Terminated" },
+                DepartmentId = 4,
                 PhotoPath = "images/Brandon.jpg"
             };
 
