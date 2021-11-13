@@ -17,6 +17,11 @@ namespace EmployeeManagement.UI.Services
             return await _httpClient.GetFromJsonAsync<Employee[]>("api/employees");
         }
 
+        public async Task<Employee> GetEmployeeById(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<Employee>($"api/employees/{id}");
+        }
+
         public Task<Employee> AddEmployee(Employee employee)
         {
             throw new NotImplementedException();
@@ -32,10 +37,7 @@ namespace EmployeeManagement.UI.Services
             throw new NotImplementedException();
         }
 
-        public Task<Employee> GetEmployeeById(int employeeId)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<IEnumerable<Employee>> Search(string name, Gender? gender)
         {
