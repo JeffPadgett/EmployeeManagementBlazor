@@ -14,6 +14,25 @@ namespace EmployeeMmanagement.Api.Controllers
             _empRepository = context;
         }
 
+        [HttpGet("{search}")]
+        public async Task<ActionResult<IEnumerable<Employee>>> Search(string name, Gender? gender)
+        {
+            try
+            {
+                var resut = await _empRepository.Search(name, gender);
+                if (resut.Any())
+                {
+                    return Ok(resut);
+                }
+
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error during search request.");
+            }
+        }
+
         // GET: api/employees
         [HttpGet]
         public async Task<ActionResult> GetEmployees()
