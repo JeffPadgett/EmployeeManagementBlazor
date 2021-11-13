@@ -62,7 +62,7 @@ namespace EmployeeMmanagement.Api.Controllers
                     return BadRequest();
                 }
 
-                var employee = _empRepository.GetEmployeeByEmail(emp.Email);
+                var employee = await _empRepository.GetEmployeeByEmail(emp.Email);
                 if (employee != null)
                 {
                     ModelState.AddModelError("email", "Employee email already in use");
@@ -105,5 +105,22 @@ namespace EmployeeMmanagement.Api.Controllers
             }
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteEmployee(int id)
+        {
+            try
+            {
+                Employee empToDelete = await _empRepository.GetEmployeeById(id);
+                if (empToDelete == null)
+                {
+                    return BadRequest("Employee does not exist");
+                }
+                return Ok(await _empRepository.DeleteEmployee(id));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting data.");
+            }
+        }
     }
 }

@@ -18,14 +18,16 @@ namespace EmployeeMmanagement.Api.Models
             return result.Entity;
         }
 
-        public async void DeleteEmployee(int employeeId)
+        public async Task<Employee> DeleteEmployee(int employeeId)
         {
             var result = await _context.Employees.FirstOrDefaultAsync(emp => emp.EmployeeId == employeeId);
             if (result != null)
             {
                 _context.Employees.Remove(result);
                 await _context.SaveChangesAsync();
+                return result;
             }
+            throw new Exception("DeleteEmployee failed execution");
         }
 
         public async Task<Employee> GetEmployeeByEmail(string email)
