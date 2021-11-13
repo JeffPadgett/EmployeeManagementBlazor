@@ -14,7 +14,7 @@ namespace EmployeeManagement.UI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Employees = await EmployeeService.GetEmployees();
+            Employees = (await EmployeeService.GetEmployees()).ToList();
         }
     }
 }
