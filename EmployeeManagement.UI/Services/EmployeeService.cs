@@ -7,9 +7,9 @@ namespace EmployeeManagement.UI.Services
     {
         private readonly HttpClient _httpClient;
 
-        public EmployeeService(HttpClient httpClient)
+        public EmployeeService(IHttpClientFactory httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient.CreateClient("EmployeeServiceClient");
         }
 
         public async Task<IEnumerable<Employee>> GetEmployees()

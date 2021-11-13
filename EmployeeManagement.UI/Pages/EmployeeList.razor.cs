@@ -1,19 +1,20 @@
-﻿using EmployeeManagement.Models;
+using EmployeeManagement.Models;
 using EmployeeManagement.UI.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace EmployeeManagement.UI.Pages
 {
-    public class EmployeeListBase : ComponentBase
+    public partial class EmployeeList
     {
-        public IEnumerable<Employee> Employees { get; set; }
 
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
 
+        public IEnumerable<Employee> Employees { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-           Employees = await EmployeeService.GetEmployees();
+            Employees = await EmployeeService.GetEmployees();
         }
     }
 }
