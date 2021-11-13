@@ -46,7 +46,32 @@ namespace EmployeeMmanagement.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data from the database with empId:{id}");
             }
+        }
 
+        // POST: api/employees
+        //When doing just about any post CREATE. We need to do 3 things, return status code 201,
+        //return the newly created resource
+        //and include the location header in the response.
+        [HttpPost]
+        public async Task<ActionResult<Employee>> CreateEmployee(Employee emp)
+        {
+            try
+            {
+                if (emp == null)
+                {
+                    return BadRequest();
+                }
+
+                var createdEmployee = await _empRepository.AddEmployee(emp);
+
+                return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.EmployeeId }, createdEmployee);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data from the database");
+                throw;
+            }
+            return Ok();
         }
 
     }
