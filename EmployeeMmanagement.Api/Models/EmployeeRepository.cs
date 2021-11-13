@@ -28,6 +28,11 @@ namespace EmployeeMmanagement.Api.Models
             }
         }
 
+        public async Task<Employee> GetEmployeeByEmail(string email)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(emp => email == emp.Email);
+        }
+
         public async Task<Employee> GetEmployeeById(int employeeId)
         {
             return await _context.Employees.FirstOrDefaultAsync(emp => emp.EmployeeId == employeeId);
