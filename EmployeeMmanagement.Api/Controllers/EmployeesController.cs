@@ -70,7 +70,6 @@ namespace EmployeeMmanagement.Api.Controllers
                 }
 
                 var createdEmployee = await _empRepository.AddEmployee(emp);
-
                 return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.EmployeeId }, createdEmployee);
             }
             catch (Exception)
@@ -78,7 +77,32 @@ namespace EmployeeMmanagement.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data from the database");
                 throw;
             }
-            return Ok();
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Employee>> UpdateEmployee(int id, Employee emp)
+        {
+            try
+            {
+                if (id != emp.EmployeeId)
+                {
+                    return BadRequest("Employee ID mismatch.");
+                }
+
+                Employee employeeToUpdate = await _empRepository.GetEmployeeById(id);
+
+                if (employeeToUpdate == null)
+                {
+                    return NotFound($"Employee with Id:{id} not found.");
+                }
+
+                return await _empRepository.UpdateEmployee(emp);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating data with empId:{id}");
+            }
         }
 
     }
