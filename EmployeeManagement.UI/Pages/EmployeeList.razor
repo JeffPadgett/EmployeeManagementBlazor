@@ -26,3 +26,15 @@ else
     </div>
 }
 
+@code {
+    public IEnumerable<Employee> Employees { get; set; }
+
+    [Inject]
+    public IEmployeeService EmployeeService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = await EmployeeService.GetEmployees();
+    }
+}
+
