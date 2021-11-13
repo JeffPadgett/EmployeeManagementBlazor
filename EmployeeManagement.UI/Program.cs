@@ -7,17 +7,12 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddHttpClient("EmployeeServiceClient",client =>
-{
-    //client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-    client.BaseAddress = new Uri("https://localhost:7043/");
-});
-
-
 builder.Services.AddHttpClient<IEmployeeService, EmployeeService>(client =>
 {
-    //client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+#if DEBUG
     client.BaseAddress = new Uri("https://localhost:7043/");
+#endif
 });
 
 await builder.Build().RunAsync();
