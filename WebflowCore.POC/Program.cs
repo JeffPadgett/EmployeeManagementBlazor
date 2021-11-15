@@ -24,7 +24,7 @@ namespace WebflowCore.Sample01
                 Value2 = 10
             };
 
-            host.StartWorkflow("PassingDataWorkflow", 1, initialData);
+            host.StartWorkflow("PassingDataWorkflow", version: 1, initialData);
             
             Console.ReadLine();
             host.Stop();
