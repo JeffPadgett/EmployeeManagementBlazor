@@ -17,5 +17,18 @@ namespace EmployeeManagement.UI.Pages
         {
             Employees = (await EmployeeService.GetEmployees()).ToList();
         }
+
+        public int SelectedEmployeesCount { get; set; } = 0;
+        protected void SelectionChangedEventHandler(bool isSelected)
+        {
+            if (isSelected)
+            {
+                SelectedEmployeesCount++;
+            }
+            else
+            {
+                SelectedEmployeesCount--;
+            }
+        }
     }
 }

@@ -1,8 +1,12 @@
-﻿<h3>Display Employee</h3>
+﻿@*Child component. The only thing gto do with this component is to display a card of the employee. *@
+<h3>Display Employee</h3>
 
 <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
     <div class="card-header">
-        <h3>@Employee.FirstName @Employee.LastName</h3>
+        <h3>
+            <input type="checkbox" @onchange="CheckBoxChangedEventHandler" />
+            @Employee.FirstName @Employee.LastName
+        </h3>
         <img class="card-img-top imageThumbnail" src=@Employee.PhotoPath />
 
         @if (ShowFooter)
@@ -13,6 +17,5 @@
                 <a href="#" class="btn btn-danger m-1">Delete</a>
             </div>
         }
-
     </div>
 </div>

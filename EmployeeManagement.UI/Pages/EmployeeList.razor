@@ -1,7 +1,7 @@
 ﻿@page "/"
 
-<h3>Employee List</h3>
-<input type="checkbox" id="sfInput" @bind="ShowFooter"/>
+<h3>Selected Employee Count - @SelectedEmployeesCount</h3>
+<input type="checkbox" id="sfInput" @bind="ShowFooter" />
 <label for="sfInput">Show Footer</label>
 @if (Employees == null)
 {
@@ -12,7 +12,8 @@ else
     <div class="card-deck">
         @foreach (Employee emp in Employees)
         {
-            <DisplayEmployee Employee="emp" ShowFooter="ShowFooter"></DisplayEmployee>
+            <DisplayEmployee Employee="emp" ShowFooter="ShowFooter" OnEmployeeSelection="SelectionChangedEventHandler">
+            </DisplayEmployee>
         }
     </div>
 }
