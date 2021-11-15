@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using WebflowCore.Sample01.Models;
 using WebflowCore.Sample01.Services;
 using WebflowCore.Sample01.Steps;
 using WorkflowCore.Interface;
@@ -14,10 +15,16 @@ namespace WebflowCore.Sample01
 
             //start the workflow host
             var host = serviceProvider.GetService<IWorkflowHost>();
-            host.RegisterWorkflow<HelloWorldWorkflow>();
+            host.RegisterWorkflow<PassingDataWorkflow, MyDataClass>();
             host.Start();
 
-            host.StartWorkflow("HelloWorldWorkflow");
+            var initialData = new MyDataClass
+            {
+                Value1 = 5,
+                Value2 = 10
+            };
+
+            host.StartWorkflow("PassingDataWorkflow", 1, initialData);
             
             Console.ReadLine();
             host.Stop();
