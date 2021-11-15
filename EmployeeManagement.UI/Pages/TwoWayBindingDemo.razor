@@ -1,0 +1,14 @@
+﻿@page "/TwoWayBindingDemo"
+
+<h3>Two Way Binding Demo</h3>
+
+<hr />
+
+<b>Description</b>
+
+<div>
+    <textarea @bind="Description" style="width:500px" @bind:event="oninput" />
+</div>
+<div>
+    Count : @Description.Length
+</div>

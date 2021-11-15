@@ -11,6 +11,9 @@ namespace EmployeeManagement.UI.Pages
 
         protected string Coordinates { get; set; }
 
+        private string ButtonText { get; set; } = "Hide Footer";
+        private string CssClass { get; set; } = null;
+
         [Parameter]
         public string Id { get; set; }
 
@@ -23,9 +26,23 @@ namespace EmployeeManagement.UI.Pages
             Employee = await EmployeeService.GetEmployeeById(int.Parse(Id));
         }
 
-        protected void Mouse_Move(MouseEventArgs e)
+        protected void MouseMoveEventHandler(MouseEventArgs e)
         {
             Coordinates = $"X = {e.ClientX} Y = {e.ClientY}";
+        }
+
+        protected void ButtonClickEventHandler()
+        {
+            if (ButtonText == "Hide Footer")
+            {
+                ButtonText = "Show Footer";
+                CssClass = "HideFooter";
+            }
+            else
+            {
+                CssClass = null;
+                ButtonText = "Hide Footer";
+            }
         }
     }
 }
