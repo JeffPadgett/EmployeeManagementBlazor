@@ -6,8 +6,9 @@
 
 <MudPaper Class="pa-4 ma-2">
     <MudGrid>
-    <MudItem xs="6">
-        
+
+        <MudItem xs="6">
+
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -25,8 +26,31 @@
                     <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>
                 </MudCardActions>
             </MudCard>
-    </MudItem>
-    <MudItem xs="6">
+
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudCheckBox @bind-Checked="@follow" Dense="true" Color="Color.Success">Follow</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@unFollow" Dense="false" Color="Color.Primary">Un Follow</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@streamOnline" Dense="true" Color="Color.Tertiary">Stream Online</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@streamOffline" Dense="false" Color="Color.Warning">Stream Offline</MudCheckBox>
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudTextField @bind-Value="StreamerName" Label="Streamer Name" Variant="Variant.Outlined" Placeholder="Works!"></MudTextField>
+                    </MudItem>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Subscribe to Events!</MudButton>
+                </MudCardActions>
+            </MudCard>
+
+        </MudItem>
+
+        <MudItem xs="6">
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -37,27 +61,30 @@
                     </CardHeaderActions>
                 </MudCardHeader>
                 <MudCardContent>
-                    <MudTable Items="@subscribers" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable" 
-                          T="SubscriptionDto" >
-                            <HeaderContent>
-                                <MudTh>Name</MudTh>
-                                <MudTh>Type</MudTh>
-                                <MudTh>Status</MudTh>
-                                <MudTh>Delete</MudTh>
-                            </HeaderContent>
-                            <RowTemplate>
-                                <MudTd DataLabel="Namer">@context.Name</MudTd>
-                                <MudTd DataLabel="Type">@context.Type</MudTd>
-                                <MudTd DataLabel="Status">@context.Status</MudTd>
-                                <MudTd DataLabel="Delete"><MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton></MudTd>
-                            </RowTemplate>
+                    <MudTable Items="@subscribers" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable"
+                              T="SubscriptionDto">
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Type</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Namer">@context.Name</MudTd>
+                            <MudTd DataLabel="Type">@context.Type</MudTd>
+                            <MudTd DataLabel="Status">@context.Status</MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton OnClick="((e) => DeleteEventSub(context))" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
                     </MudTable>
                 </MudCardContent>
                 <MudCardActions>
-                   @* <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>*@
+                    @* <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>*@
                 </MudCardActions>
             </MudCard>
         </MudItem>
+
     </MudGrid>
 </MudPaper>
 
@@ -65,6 +92,13 @@
 
     List<SubscriptionDto> subscribers;
     private MudTable<SubscriptionDto> mudTable;
+
+    private string StreamerName;
+
+    bool follow;
+    bool unFollow;
+    bool streamOnline;
+    bool streamOffline;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,6 +115,10 @@
         subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "stream.offline" });
     }
 
-    void DeleteEventSub
+    void DeleteEventSub(SubscriptionDto subscription)
+    {
+        Console.WriteLine($"{subscription.Type} for {subscription.Name} deleted");
+        subscribers.Remove(subscription);
+    }
 
 }
