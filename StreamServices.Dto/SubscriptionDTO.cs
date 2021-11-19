@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StreamServices.Dto
 {
-    public class SubscriptionDTO
+    public class SubscriptionDto
     {
         [JsonProperty("id")]
         public string Id { get; set; }

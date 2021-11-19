@@ -1,20 +1,86 @@
 ﻿@page "/"
-
+@using StreamServices.Dto
 @inject HttpClient _httpClient
 
 <PageTitle>Index</PageTitle>
 
-<h3>Test HTTP Client</h3>
-
-<MudButton OnClick="GetTestEventHandler">Push to Test</MudButton>
-<MudText>@message</MudText>
+<MudPaper Class="pa-4 ma-2">
+    <MudGrid>
+    <MudItem xs="6">
+        
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">The Story Book</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>This day everything happend.</MudText>
+                    <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>
+                </MudCardActions>
+            </MudCard>
+    </MudItem>
+    <MudItem xs="6">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Current Subscriptions</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTable Items="@subscribers" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable" 
+                          T="SubscriptionDto" >
+                            <HeaderContent>
+                                <MudTh>Name</MudTh>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Status</MudTh>
+                                <MudTh>Delete</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Namer">@context.Name</MudTd>
+                                <MudTd DataLabel="Type">@context.Type</MudTd>
+                                <MudTd DataLabel="Status">@context.Status</MudTd>
+                                <MudTd DataLabel="Delete"><MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton></MudTd>
+                            </RowTemplate>
+                    </MudTable>
+                </MudCardContent>
+                <MudCardActions>
+                   @* <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>*@
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
 
 @code {
-    string url = "api/HttpTriggerTest";
-    string message = string.Empty;
-    async Task GetTestEventHandler()
+
+    List<SubscriptionDto> subscribers;
+    private MudTable<SubscriptionDto> mudTable;
+
+    protected override async Task OnInitializedAsync()
     {
-        var response = await _httpClient.GetAsync("api/HttpTriggerTest");
-        message = await response.Content.ReadAsStringAsync();
+        subscribers = new();
+        AddTempList();
+        await Task.Delay(0);
     }
+
+
+    void AddTempList()
+    {
+        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "stream.online" });
+        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "user.follow" });
+        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "stream.offline" });
+    }
+
+    void DeleteEventSub
+
 }
