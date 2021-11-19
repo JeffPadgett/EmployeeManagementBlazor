@@ -7,6 +7,10 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Desktop\OneLionStreamServices\LionStreamServicesSolution\StreamServices.Core\StreamServices.Core.csproj" />
+    <ProjectReference Include="..\StreamServices.Dto\StreamServices.Dto.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
