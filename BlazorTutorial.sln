@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebflowCore", "WebflowCore"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleProjects", "ExampleProjects", "{4E81BDBC-5385-487E-BE5F-F668F66CB7A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.Client", "StreamServices.Client\StreamServices.Client.csproj", "{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Client", "StreamServices.Client\StreamServices.Client.csproj", "{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.API", "StreamServices.API\StreamServices.API.csproj", "{5F6C7B7B-6115-4105-819B-5570F4158B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.API", "StreamServices.API\StreamServices.API.csproj", "{5F6C7B7B-6115-4105-819B-5570F4158B3E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Application", "..\..\..\Desktop\OneLionStreamServices\LionStreamServicesSolution\LionStreamServices\StreamServices.Application.csproj", "{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}"
 EndProject
@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Core", "..\.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StreamServiceReferences", "StreamServiceReferences", "{96DB0209-C51C-4316-A66C-7A2F62EF0AA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.Dto", "StreamServices.Dto\StreamServices.Dto.csproj", "{14D962E3-7F5C-449B-8AB8-28D242ED5084}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Dto", "StreamServices.Dto\StreamServices.Dto.csproj", "{14D962E3-7F5C-449B-8AB8-28D242ED5084}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

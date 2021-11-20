@@ -9,6 +9,32 @@
 
         <MudItem xs="6">
 
+            <MudCard Class="mb-3">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudCheckBox @bind-Checked="@follow" Dense="true" Color="Color.Success">Follow</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@unFollow" Dense="false" Color="Color.Primary">Un Follow</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@streamOnline" Dense="true" Color="Color.Tertiary">Stream Online</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@streamOffline" Dense="false" Color="Color.Warning">Stream Offline</MudCheckBox>
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudTextField @bind-Value="StreamerName" 
+                            Label="Streamer Name" 
+                            Variant="Variant.Outlined" 
+                            Placeholder="Channel Name..."  
+                            DebounceInterval=300
+                            OnDebounceIntervalElapsed="CheckValidName"/>
+                    </MudItem>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Subscribe to Events!</MudButton>
+                </MudCardActions>
+            </MudCard>
+
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -24,27 +50,6 @@
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>
-                </MudCardActions>
-            </MudCard>
-
-            <MudCard>
-                <MudCardHeader>
-                    <CardHeaderContent>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                    </CardHeaderActions>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudCheckBox @bind-Checked="@follow" Dense="true" Color="Color.Success">Follow</MudCheckBox>
-                    <MudCheckBox @bind-Checked="@unFollow" Dense="false" Color="Color.Primary">Un Follow</MudCheckBox>
-                    <MudCheckBox @bind-Checked="@streamOnline" Dense="true" Color="Color.Tertiary">Stream Online</MudCheckBox>
-                    <MudCheckBox @bind-Checked="@streamOffline" Dense="false" Color="Color.Warning">Stream Offline</MudCheckBox>
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudTextField @bind-Value="StreamerName" Label="Streamer Name" Variant="Variant.Outlined" Placeholder="Works!"></MudTextField>
-                    </MudItem>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Subscribe to Events!</MudButton>
                 </MudCardActions>
             </MudCard>
 
@@ -121,4 +126,9 @@
         subscribers.Remove(subscription);
     }
 
+    async Task CheckValidName()
+    {
+        await Task.Delay(1);
+        Console.WriteLine("Debounce triggered");
+    }
 }
