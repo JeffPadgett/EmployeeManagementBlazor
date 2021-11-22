@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Core", "..\.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Dto", "StreamServices.Dto\StreamServices.Dto.csproj", "{14D962E3-7F5C-449B-8AB8-28D242ED5084}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.API.Test.Unit", "StreamServices.API.Test\StreamServices.API.Test.Unit.csproj", "{8336A1F4-813A-48FD-9CAF-C283A0EE283C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{14D962E3-7F5C-449B-8AB8-28D242ED5084}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14D962E3-7F5C-449B-8AB8-28D242ED5084}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14D962E3-7F5C-449B-8AB8-28D242ED5084}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8336A1F4-813A-48FD-9CAF-C283A0EE283C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8336A1F4-813A-48FD-9CAF-C283A0EE283C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8336A1F4-813A-48FD-9CAF-C283A0EE283C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8336A1F4-813A-48FD-9CAF-C283A0EE283C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
