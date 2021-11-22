@@ -44,11 +44,9 @@ namespace StreamServices.API
 
             if (user == null || string.IsNullOrWhiteSpace(user.Action) || string.IsNullOrEmpty(user.Id)) return new BadRequestResult();
 
-
             appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
             AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
-            
-            
+                   
             log.LogInformation($"Subscribing {user.Login}");
             TwitchSubscriptionInitalPost subObject = new TwitchSubscriptionInitalPost(user.Id, user.Action);
             string subPayLoad = JsonConvert.SerializeObject(subObject);
@@ -98,7 +96,6 @@ namespace StreamServices.API
             [Table("Tokens", "Twitch", "1", Connection = "AzureWebJobsStorage")] AppAccessToken appAccessToken,
             ILogger log)
         {
-
             appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
             AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
             string id = req.Query["id"];
