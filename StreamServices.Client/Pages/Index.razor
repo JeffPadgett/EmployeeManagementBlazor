@@ -1,6 +1,7 @@
 ﻿@page "/"
-@using StreamServices.Dto
+@using System.Text
 @inject HttpClient _httpClient
+@inject IDialogService DialogService
 
 <PageTitle>Index</PageTitle>
 
@@ -18,38 +19,39 @@
                 </MudCardHeader>
                 <MudCardContent>
                     <MudCheckBox @bind-Checked="@follow" Dense="true" Color="Color.Success">Follow</MudCheckBox>
-                    <MudCheckBox @bind-Checked="@unFollow" Dense="false" Color="Color.Primary">Un Follow</MudCheckBox>
+                    <MudCheckBox @bind-Checked="@raid" Dense="false" Color="Color.Primary">Raid</MudCheckBox>
                     <MudCheckBox @bind-Checked="@streamOnline" Dense="true" Color="Color.Tertiary">Stream Online</MudCheckBox>
                     <MudCheckBox @bind-Checked="@streamOffline" Dense="false" Color="Color.Warning">Stream Offline</MudCheckBox>
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudTextField @bind-Value="StreamerName" 
+                    @*<MudItem xs="12" sm="6" md="4">*@
+                        <MudTextField @bind-Value="streamerName" 
                             Label="Streamer Name" 
                             Variant="Variant.Outlined" 
                             Placeholder="Channel Name..."  
-                            DebounceInterval=300
+                            DebounceInterval=500
                             OnDebounceIntervalElapsed="CheckValidName"/>
-                    </MudItem>
+                    @*</MudItem>*@
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Subscribe to Events!</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@PostEventSub" Disabled="@(!enableSubmit)">Subscribe to Events!</MudButton>
                 </MudCardActions>
             </MudCard>
 
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6">The Story Book</MudText>
+                        <MudText Typo="Typo.h6">Results</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
                     </CardHeaderActions>
                 </MudCardHeader>
                 <MudCardContent>
-                    <MudText>This day everything happend.</MudText>
-                    <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+                    <MudText Typo="Typo.body2">@foundUser.Login</MudText>
+                    <MudText Typo="Typo.body2">@foundUser.Description</MudText>
+                    <img src="@foundUser.ProfileImageUrl" />
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>
+                  @*  <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>*@
                 </MudCardActions>
             </MudCard>
 
@@ -98,37 +100,103 @@
     List<SubscriptionDto> subscribers;
     private MudTable<SubscriptionDto> mudTable;
 
-    private string StreamerName;
+    private string streamerName;
 
     bool follow;
-    bool unFollow;
+    bool raid;
     bool streamOnline;
     bool streamOffline;
+
+    TwitchUser foundUser = new();
+
+    bool enableSubmit = false;
+
+      /*
+     * Subscribe - post dto object
+     * GetSubscriptions 
+     * DeleteEventSubsciption -- pass query string param called id with SubEvent Id
+     * CheckUserName - pass string called name with channel name
+     */
 
     protected override async Task OnInitializedAsync()
     {
         subscribers = new();
-        AddTempList();
+        await RetrieveEventSubs();
         await Task.Delay(0);
     }
 
 
-    void AddTempList()
+    async Task RetrieveEventSubs()
     {
-        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "stream.online" });
-        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "user.follow" });
-        subscribers.Add(new SubscriptionDto { Name = "Test", Status = "Active", Type = "stream.offline" });
+        var response = await _httpClient.GetAsync("api/GetSubscriptions");
+        var results = JsonConvert.DeserializeObject<List<SubscriptionDto>>(await response.Content.ReadAsStringAsync());
+        if(results != null && results.Count > 0)
+        {
+            subscribers = results;
+        }
+        await InvokeAsync(StateHasChanged);
+
     }
 
-    void DeleteEventSub(SubscriptionDto subscription)
+    async Task PostEventSub()
     {
+        enableSubmit = false;
+
+        if (follow)
+        {
+            foundUser.Action = "channel.follow";
+            await PostSub(foundUser);
+        }
+        if (raid)
+        {
+            foundUser.Action = "channel.raid";
+            await PostSub(foundUser);
+        }
+        if (streamOnline)
+        {
+            foundUser.Action = "stream.online";
+            await PostSub(foundUser);
+        }
+        if (streamOffline)
+        {
+            foundUser.Action = "stream.offline";
+            await PostSub(foundUser);
+        }
+        await RetrieveEventSubs();
+    }
+
+    async Task PostSub(TwitchUser twitchUser)
+    {
+        var content = new StringContent(JsonConvert.SerializeObject(twitchUser), Encoding.UTF8, "application/json");
+        await _httpClient.PostAsync("api/Subscribe", content);
+    }
+
+    async Task DeleteEventSub(SubscriptionDto subscription)
+    {
+        //var result = Dia
+
         Console.WriteLine($"{subscription.Type} for {subscription.Name} deleted");
+        var response = await _httpClient.DeleteAsync($"api/DeleteEventSubsciption?id={subscription.Id}");
+        response.EnsureSuccessStatusCode();
         subscribers.Remove(subscription);
     }
 
     async Task CheckValidName()
     {
-        await Task.Delay(1);
+        var response = await _httpClient.GetAsync($"api/CheckUserName?name={streamerName}");
+        var result = JsonConvert.DeserializeObject<TwitchUser>(await response.Content.ReadAsStringAsync());
+        if  (result is not null)
+        {
+            foundUser = result;
+            enableSubmit = true;
+        }
+        else
+        {
+            foundUser  = new();
+            enableSubmit = false;
+        }
+        await InvokeAsync(StateHasChanged);
+
         Console.WriteLine("Debounce triggered");
     }
 }
