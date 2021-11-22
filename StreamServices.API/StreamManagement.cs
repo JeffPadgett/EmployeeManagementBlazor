@@ -11,7 +11,10 @@ using StreamServices.Core.Models;
 using StreamServices.Dto;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,90 +23,128 @@ namespace StreamServices.API
     public class StreamManagement : BaseFunction
     {
         private readonly IMapper _mapper;
+        private readonly HttpClient _client;
+
         public StreamManagement(IHttpClientFactory httpClientFactory, IMapper mapper) : base(httpClientFactory)
         {
             _mapper = mapper;
+            _client = httpClientFactory.CreateClient("Twitch");
         }
 
         //http://localhost:7071/api/Subscribe?userName=brokenswordx
         //Function is meant to pass the userId in and subtype
         [FunctionName("Subscribe")]
-        public async Task<IActionResult> Subscribe([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        public async Task<IActionResult> Subscribe([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = null)] HttpRequest req,
             [Table("Tokens", Connection = "AzureWebJobsStorage")] CloudTable cloudTable,
             [Table("Tokens", "Twitch", "1", Connection = "AzureWebJobsStorage")] AppAccessToken appAccessToken,
             ILogger log)
         {
-            var baseTwitchEndpoint = Environment.GetEnvironmentVariable("BaseTwitchUrl");
-            string user = req.Query["userName"].ToString();
-            string subType = req.Query["subType"].ToString();
+            string body = await new StreamReader(req.Body).ReadToEndAsync();
+            var user = JsonConvert.DeserializeObject<TwitchUser>(body);
 
-            if (string.IsNullOrWhiteSpace(user))
-            {
-                return new BadRequestObjectResult("Please pass a user name into the query string paramter. Like ?userName = coolStreamer or ?subType=channel.follow. ");
-            }
+            if (user == null || string.IsNullOrWhiteSpace(user.Action) || string.IsNullOrEmpty(user.Id)) return new BadRequestResult();
+
 
             appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
-
-            log.LogInformation($"Subscribeing {user}");
-            var channelToSubscribeTo = await IdentifyUser(user, appAccessToken);
-            TwitchSubscriptionInitalPost subObject = new TwitchSubscriptionInitalPost(await GetChannelIdForUserName(channelToSubscribeTo, appAccessToken), subType);
+            AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
+            
+            
+            log.LogInformation($"Subscribing {user.Login}");
+            TwitchSubscriptionInitalPost subObject = new TwitchSubscriptionInitalPost(user.Id, user.Action);
             string subPayLoad = JsonConvert.SerializeObject(subObject);
             var postRequestContent = new StringContent(subPayLoad, Encoding.UTF8, "application/json");
 
             string responseBody;
-            string namedUser = char.IsDigit(user[0]) ? await GetUserNameForChannelId(user, appAccessToken) : user;
-            using (var client = GetHttpClient(baseTwitchEndpoint))
-            {
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + appAccessToken.AccessToken);
-                var responseMessage = await client.PostAsync("eventsub/subscriptions", postRequestContent);
 
-                if (!responseMessage.IsSuccessStatusCode)
-                {
-                    responseBody = await responseMessage.Content.ReadAsStringAsync();
-                    log.Log(LogLevel.Error, $"Error response body {responseBody}");
-                }
-                else
-                {
-                    log.LogInformation($"Subscribed to {namedUser}'s stream");
-                    return new OkObjectResult($"Notifications will now be sent when {subType} on stream {namedUser}");
-                }
+            var responseMessage = await _client.PostAsync("eventsub/subscriptions", postRequestContent);
+
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                responseBody = await responseMessage.Content.ReadAsStringAsync();
+                log.Log(LogLevel.Error, $"Error response body {responseBody}");
             }
-            return new BadRequestObjectResult(responseBody + $" When attempting to subscribe {namedUser}");
+            else
+            {
+                log.LogInformation($"Subscribed to {user.Login}'s stream");
+                return new OkObjectResult($"Notifications will now be sent when {user.Action} on stream {user.Login}");
+            }
+            return new BadRequestObjectResult(responseBody + $" When attempting to subscribe {user.Login}");
         }
 
 
         [FunctionName("GetSubscriptions")]
         public async Task<IActionResult> GetSubscriptions(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [Table("Tokens", Connection = "AzureWebJobsStorage")] CloudTable cloudTable,
+            [Table("Tokens", "Twitch", "1", Connection = "AzureWebJobsStorage")] AppAccessToken appAccessToken,
+            ILogger log)
+        {
+            appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
+            AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
+            var response = await _client.GetAsync("https://api.twitch.tv/helix/eventsub/subscriptions");
+            response.EnsureSuccessStatusCode();
+            var sublist = JsonConvert.DeserializeObject<SubscriptionList>(await response.Content.ReadAsStringAsync());
+            var dtos = _mapper.Map<List<SubscriptionDto>>(sublist.Subscriptions);
+
+            dtos.ForEach(x => x.Name = _client.GetFromJsonAsync<TwitchUsers>($"users?id={x.BroadcasterUserId}").GetAwaiter().GetResult().Users[0].Login);
+
+            return new OkObjectResult(JsonConvert.SerializeObject(dtos));
+        }
+
+        [FunctionName("DeleteEventSubsciption")]
+        public async Task<IActionResult> DeleteEventSubsciption(
+            [HttpTrigger(AuthorizationLevel.Function, "delete", Route = null)] HttpRequest req,
+            [Table("Tokens", Connection = "AzureWebJobsStorage")] CloudTable cloudTable,
+            [Table("Tokens", "Twitch", "1", Connection = "AzureWebJobsStorage")] AppAccessToken appAccessToken,
+            ILogger log)
+        {
+
+            appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
+            AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
+            string id = req.Query["id"];
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return new BadRequestResult();
+            }
+            var response = await _client.DeleteAsync($"eventsub/subscriptions?id={id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new BadRequestObjectResult("No Event to unsubscribe from");
+            }
+
+            return new OkResult();
+        }
+
+        [FunctionName("CheckUserName")]
+        public async Task<IActionResult> CheckUserName(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             [Table("Tokens", Connection = "AzureWebJobsStorage")] CloudTable cloudTable,
             [Table("Tokens", "Twitch", "1", Connection = "AzureWebJobsStorage")] AppAccessToken appAccessToken,
             ILogger log)
         {
             appAccessToken = await VerifyAccessToken(cloudTable, appAccessToken, log);
 
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + appAccessToken.AccessToken);
-                client.DefaultRequestHeaders.Add("Client-ID", Environment.GetEnvironmentVariable("ClientId"));
-                var response = await client.GetAsync("https://api.twitch.tv/helix/eventsub/subscriptions");
-                response.EnsureSuccessStatusCode();
-                var resp = await response.Content.ReadAsStringAsync();
+            AddAuthHeaderToTwichClient(_client, appAccessToken.AccessToken);
 
-                return await GetEventSubscriptions(appAccessToken, resp);
+            string channelName = req.Query["name"];
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return new BadRequestResult();
             }
+            var users = await _client.GetFromJsonAsync<TwitchUsers>($"users?login={channelName}");
+
+            if (users is null) return new BadRequestResult();
+
+            var user = users.Users.FirstOrDefault();
+
+            if (user is null) return new BadRequestResult();
+
+            return new OkObjectResult(JsonConvert.SerializeObject(user));
         }
 
-        private async Task<IActionResult> GetEventSubscriptions(AppAccessToken appAccessToken, string resp)
+        private void AddAuthHeaderToTwichClient(HttpClient httpClient, string accessToken)
         {
-            SubscriptionList twitchList = JsonConvert.DeserializeObject<SubscriptionList>(resp);
-            var formatedList = _mapper.Map<List<SubscriptionDto>>(twitchList.Subscriptions);
-            formatedList.RemoveAll(x => x.Status != "enabled");
-            foreach (var sub in formatedList)
-            {
-                sub.Name = (await GetUserNameForChannelId(sub.BroadcasterUserId, appAccessToken));
-            }
-
-            return new OkObjectResult(JsonConvert.SerializeObject(formatedList));
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
         }
     }
 }
