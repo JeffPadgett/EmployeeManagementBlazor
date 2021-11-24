@@ -9,21 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement.UI", "Em
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeMmanagement.Api", "EmployeeMmanagement.Api\EmployeeMmanagement.Api.csproj", "{AA8C0999-1E9E-4B4E-B81C-AC3DF6966994}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebflowCore.Sample01", "WebflowCore.POC\WebflowCore.Sample01.csproj", "{CEC4EFD2-D277-4C97-BEE2-197D395C7248}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebflowCore", "WebflowCore", "{C530CC6F-A07A-4012-8F9E-75A501A3C48C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleProjects", "ExampleProjects", "{4E81BDBC-5385-487E-BE5F-F668F66CB7A8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.Client", "StreamServices.Client\StreamServices.Client.csproj", "{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamServices.API", "StreamServices.API\StreamServices.API.csproj", "{5F6C7B7B-6115-4105-819B-5570F4158B3E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Application", "..\..\..\Desktop\OneLionStreamServices\LionStreamServicesSolution\LionStreamServices\StreamServices.Application.csproj", "{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamServices.Core", "..\..\..\Desktop\OneLionStreamServices\LionStreamServicesSolution\StreamServices.Core\StreamServices.Core.csproj", "{C0ED9CD4-F536-40C3-B870-BCC89B02112F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StreamServiceReferences", "StreamServiceReferences", "{96DB0209-C51C-4316-A66C-7A2F62EF0AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,26 +29,6 @@ Global
 		{AA8C0999-1E9E-4B4E-B81C-AC3DF6966994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA8C0999-1E9E-4B4E-B81C-AC3DF6966994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA8C0999-1E9E-4B4E-B81C-AC3DF6966994}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CEC4EFD2-D277-4C97-BEE2-197D395C7248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEC4EFD2-D277-4C97-BEE2-197D395C7248}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CEC4EFD2-D277-4C97-BEE2-197D395C7248}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CEC4EFD2-D277-4C97-BEE2-197D395C7248}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD33C55A-BBDA-4D80-9A0A-6F50826B7FA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F6C7B7B-6115-4105-819B-5570F4158B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F6C7B7B-6115-4105-819B-5570F4158B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F6C7B7B-6115-4105-819B-5570F4158B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F6C7B7B-6115-4105-819B-5570F4158B3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0ED9CD4-F536-40C3-B870-BCC89B02112F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0ED9CD4-F536-40C3-B870-BCC89B02112F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0ED9CD4-F536-40C3-B870-BCC89B02112F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0ED9CD4-F536-40C3-B870-BCC89B02112F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,10 +37,6 @@ Global
 		{CE0F0F29-7314-477A-A2DD-4BB71A20B7DC} = {4E81BDBC-5385-487E-BE5F-F668F66CB7A8}
 		{AE1F39AF-7BB0-453E-A26F-2C213C97A8C6} = {4E81BDBC-5385-487E-BE5F-F668F66CB7A8}
 		{AA8C0999-1E9E-4B4E-B81C-AC3DF6966994} = {4E81BDBC-5385-487E-BE5F-F668F66CB7A8}
-		{CEC4EFD2-D277-4C97-BEE2-197D395C7248} = {C530CC6F-A07A-4012-8F9E-75A501A3C48C}
-		{C530CC6F-A07A-4012-8F9E-75A501A3C48C} = {4E81BDBC-5385-487E-BE5F-F668F66CB7A8}
-		{5E8C766E-1892-4D5C-A8E8-10EF4B06C8CC} = {96DB0209-C51C-4316-A66C-7A2F62EF0AA2}
-		{C0ED9CD4-F536-40C3-B870-BCC89B02112F} = {96DB0209-C51C-4316-A66C-7A2F62EF0AA2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5B608B73-DEB1-4C88-BCEF-5B0E60307F43}
